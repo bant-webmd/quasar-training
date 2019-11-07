@@ -1,0 +1,53 @@
+----------------
+ANATOMY OF A VUE SINGLE-FILE COMPONENT 
+---------------- 
+- Index.vue is a quasar page 
+- Its a normal Vue component 
+- the main difference is it that uses the <q-page></q-page> element which is provided by quasar 
+
+
+----------------
+FILTERS
+---------------- 
+- Basically filters can be used to modify the value 
+  of an existing property 
+- EXAMPLE:
+    // Template 
+    {{ message | myMessageFilter }}
+
+    // component 
+    methods: {
+        ...
+    },
+    filters: {
+        myMessageFilter(value) {
+            return value.toLowerCase()
+        }
+     }
+
+
+----------------
+DIRECTIVES 
+---------------- 
+- You can create your own Vue directives 
+- There are hook functions that you can use to develop 
+  the directive 
+    - These pass along the element which the directive 
+      is operating on. 
+
+EXAMPLE: 
+    // template 
+    <input v-autofocus> 
+
+    // component 
+    methods: {
+        ...
+    },
+    directives: {
+        autofocus: {
+            inserted(el) {
+                // Lifecycle hook for when the element is inserted into the DOM. 
+                el.focus()
+            }
+        }
+    }

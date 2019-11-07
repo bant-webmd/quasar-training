@@ -1,0 +1,82 @@
+----------------
+PAGES AND ROUTES
+---------------- 
+- Set up routes in router/routes.js
+- For each path property specify a page-level Vue component
+
+
+----------------
+ADD PAGE NAVIGATION TO SIDEBAR (DRAWER)
+---------------- 
+- The sidebars, and top navigation, and footer, etc are all located in the Layout.vue file 
+- This is where you can change the dummy information in the navigation links 
+- Q-ITEM COMPONENT: 
+    - <q-item> is the component that shows up in the drawers by default 
+
+- Q-ICON COMPONENT: 
+    - this can quickly load in one of many material icons that come with QUASAR 
+    - Set the name property to tell it which icon to use. 
+    - The name is dependent on the CSS class name assigned to the icon. 
+    EXAMPLE: <q-icon name="school" />
+
+- IMPORTING CUSTOM ICON FONTS 
+    - create your custom icon font files and then copy them to your app’s folder and import them (src/main.js would probably be a good place).
+    - Import the Font-face in SCSS 
+    - Then import the SCSS in the JavaScript and Webpack will build it in. 
+
+- Change The link by adding a vue-router to="" attribute with the path you want 
+
+- CORRECTING ACTIVE CLASSES ON LINKS:
+    - use the 'exact' attribute on the linked q-item to only have te .active class added when the URL matches "exactly" 
+    
+
+
+----------------
+TAB NAVIGATION FOR MOBILE
+---------------- 
+- In order to use the header and footer you have to specify it in the quasar.conf.js file 
+    - Add QFooter to the conf so you can use it in the layout template 
+    - Do the same with the q-tab component 
+
+
+
+----------------
+CONSOLIDATING NAVIGATION DATA 
+---------------- 
+- Consolidate common links into an array 
+- And then loop through it. 
+
+
+----------------
+ONLY SHOW THE DRAWER (SIDE NAV) ON DESKTOP, TABS ON MOBILE
+---------------- 
+- Use the "breakpoint" prop to set the width at which the drawer will disappear 
+- The footer doesn't have a "breakpoint" prop so we'll have to add a breakpoint ourselves in the styles 
+
+
+
+----------------
+ADDING SOME STYLE TO LAYOUT 
+---------------- 
+- So the layout can be styled in the layout builder. 
+    - The letters in the view="" attribute signify the z-index arrangement of the various layout components
+    - Use the builder to come up with a configuration that works for you. 
+    EXAMPLE: <q-layout view="hHh Lpr fFf">
+
+- You can also simply override styles by inspecting the component classes 
+
+
+
+----------------
+ADD SCSS SUPPORT 
+---------------- 
+- install the sass-loader 
+RUN: npm install --save-dev sass-loader node-sass
+
+- Then simply use lang="scss" on the style tag for the components 
+
+
+
+----------------
+CUSTOMIZE THEME WITH THEME BUILDER 
+---------------- 

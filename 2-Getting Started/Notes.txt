@@ -1,0 +1,55 @@
+----------------
+INSTALL QUASAR CLI
+---------------- 
+- We are using Quasar ~v1.0
+- Best way is to install the quasar CLI 
+- RUN: npm install -g @quasar/cli
+
+
+
+----------------
+CREATE AND LAUNCH NEW QUASAR PROJECT
+---------------- 
+CREATE WITH BETA VERSION 
+RUN: quasar create <folder_name> -b dev 
+
+CREATE WITH CURRENT STABLE VERSION 
+RUN: quasar create <folder_name> 
+
+LAUNCH APP 
+RUN: quasar dev 
+
+
+----------------
+FOLDER STRUCTURE 
+---------------- 
+- App.vue is the root file 
+
+LAYOUTS: 
+- layouts/MyLayout.vue 
+- Similar to layouts in Nuxt 
+- Layouts > Pages 
+
+PAGES: 
+- Similar to pages in Nuxt 
+- Pages > Components 
+
+CSS:
+- By default Quasar uses stylus styles 
+- Also starts project with some color variables 
+- You can customize this yourself and use SCSS/LESS if you want as well 
+
+ROUTES: 
+- Routes are configured in the router/routes.js file 
+- This is done similar to the traditional vue-router  
+- Basically here is where you map paths to page-level components. 
+
+STATICS: 
+- This is where you put static assets 
+- Files in here will not be processed by webpack (they will be used as they are)
+
+STORE: 
+- This is where you put the Vuex store. 
+
+
+

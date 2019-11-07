@@ -1,0 +1,17 @@
+----------------
+DISPLAY A LIST OF TASKS 
+---------------- 
+GENERAL WORKFLOW: 
+    - First create some dummy data to display 
+    - Then look for an appropriate quasar component to represent the data effectively 
+    - Customize the component as necessary 
+
+- quasar comes with a bunch of helper classes for padding and margins
+    - see docs --> STYLE AND IDENTIY -> SPACING
+    EXAMPLE: 
+    // Add a medium amount of padding all around 
+    class="q-pa-md"
+
+    // Add a medium amount of margin all around 
+    class="q-ma-md"
+
