@@ -34,12 +34,20 @@ PAGES:
 - Similar to pages in Nuxt 
 - Pages > Components 
 
+ASSETS:
+- Everything in this folder will be processed by webpack
+    - Images here may be converted into base64 code 
+
+BOOT: 
+- We put boot files here
+- These files allow you to execute code before the app starts up 
+
 CSS:
 - By default Quasar uses stylus styles 
 - Also starts project with some color variables 
 - You can customize this yourself and use SCSS/LESS if you want as well 
 
-ROUTES: 
+ROUTER: 
 - Routes are configured in the router/routes.js file 
 - This is done similar to the traditional vue-router  
 - Basically here is where you map paths to page-level components. 
