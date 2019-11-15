@@ -44,6 +44,7 @@ module.exports = function (ctx) {
         'QItem',
         'QItemSection',
         'QItemLabel',
+        
         'QFooter',
         'QTabs',        
         'QTab',

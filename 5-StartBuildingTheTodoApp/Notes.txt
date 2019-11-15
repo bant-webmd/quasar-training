@@ -80,3 +80,4 @@ RUN: npm install --save-dev sass-loader node-sass
 ----------------
 CUSTOMIZE THEME WITH THEME BUILDER 
 ---------------- 
+Use the theme builder on the Quasar site to configure a theme 

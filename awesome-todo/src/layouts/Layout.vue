@@ -11,7 +11,6 @@
 
     <q-footer>
       <q-tabs
-        v-model="tab"
       >
         <q-route-tab 
           v-for="nav in navs"
@@ -70,7 +69,8 @@ export default {
           icon: 'settings',
           to: '/settings'
         }
-      ]
+      ],
+      tab: "Settings"
     }
   },
   methods: {
