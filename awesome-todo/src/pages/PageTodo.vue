@@ -18,9 +18,15 @@
         </q-item-section>
         
         <q-item-section side top>
-          <q-icon name="event"/>
-          <q-item-label caption>{{task.dueDate}}</q-item-label>        
-          <q-item-label caption><small>{{task.dueTime}}</small></q-item-label>        
+          <div class="row">
+            <div class="column justify-center">
+              <q-icon name="event" class="q-mr-md"/>
+            </div>
+            <div class="column">
+              <q-item-label class="row justify-end" caption>{{task.dueDate}}</q-item-label>     
+              <q-item-label class="row justify-end" caption><small>{{task.dueTime}}</small></q-item-label>        
+            </div>
+          </div>
         </q-item-section>
       </q-item>
   </q-page>

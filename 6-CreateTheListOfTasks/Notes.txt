@@ -15,3 +15,43 @@ GENERAL WORKFLOW:
     // Add a medium amount of margin all around 
     class="q-ma-md"
 
+
+
+----------------
+ADD DUE DATE AND TIME  
+---------------- 
+- Add dueDate and dueTime properties to the tasks in the page data 
+- Add q-item-label inside a new q-item-section 
+    - Do this inside of each q-item component (which is the parent of q-item-sectio)
+    - Put the Due date in this label 
+- Create another q-item-label in the same q-item-section 
+    - This time put the Due time as the label (task.dueTime)
+- Use a q-item component to generate a calendar type of icon (see material icon names)
+
+- POSITIONING ELEMENTS: 
+    - Quasar has a similar system to bootstrap for its Flexbox grid 
+    - You have rows
+        - Then columns inside the rows
+            - On columns/rows you can add justification classes for verticle and horizontal alignment of content 
+
+
+
+----------------
+ADD SOME STYLE TO THE LIST OF TASKS  
+---------------- 
+- ADD LINES BETWEEN ITEMS:
+    - You can use the "separator" prop on the q-list parent component 
+
+- ADD BUILT-IN CSS CLASSES: 
+    - class="bg-orange-1" -> for incomplete 
+    - class="bg-green-1" -> for complete tasks 
+    - Make sure to bind to the class attribute to implement 
+      conditional styling logic. 
+    
+- ADD CUSTOM CSS CLASSES: 
+    - Add 'text-strikethrough' class in the App.vue file 
+        - We define the class in this component because it will be available throughout the application this way. 
+        - Apply this class to completed tasks 
+
+    
+
