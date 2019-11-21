@@ -1,5 +1,6 @@
 <template>
   <q-page padding>
+    <q-list separator bordered>
       <q-item-label header>General</q-item-label>
 
       <q-item 
@@ -7,14 +8,15 @@
         v-ripple
         v-for="task in tasks"
         :key="task.id"     
-        @click="task.completed = !task.completed"   
+        @click="task.completed = !task.completed"
+        :class="{'bg-orange-1': !task.completed, 'bg-green-1': task.completed}"   
       >
         <q-item-section side top>
           <q-checkbox v-model="task.completed" />
         </q-item-section>
 
         <q-item-section>
-          <q-item-label>{{task.name}}</q-item-label>
+          <q-item-label :class="{'text-strikethrough': task.completed}">{{task.name}}</q-item-label>
         </q-item-section>
         
         <q-item-section side top>
@@ -29,6 +31,7 @@
           </div>
         </q-item-section>
       </q-item>
+    </q-list>
   </q-page>
 </template>
 
