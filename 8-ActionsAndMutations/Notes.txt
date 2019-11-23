@@ -1,0 +1,40 @@
+----------------
+SET COMPLETED STATUS IN VUEX STORE 
+----------------
+1) Create action called updateTask() 
+    - It is supposed to update the task object on the state 
+2) Map the actions to the methods property of the Task component 
+    - Specify all the actions we want available from the 'tasks' store module. 
+3) Call the action inside of the component 
+    - **** ACTIONS SHOULD BE CALLED WHERE THE DATA IS UPDATED!!
+    - On the click handler call the updateTask() action 
+4) Pass the relevant update data through the action
+    - We need the id of the task and the properties we want to change within that task 
+    Example: {id: id, updates: { completed: !task.completed }}
+5) Add the payload as a parameter to the action 
+    updateTask({commit}, payload) {...}
+6) Create a mutation called updateTask(state, payload)
+    - In the mutation use object.assign to copy the properties of the payload to the task that we want to edit 
+    Example: Object.assign(state.tasks[payload.id], payload.updates)
+7) Add class of no-pointer-events to the QCheckbox 
+    - This will make sure that the click event is only handled by the QItem.
+8) We can also remove the 2-way binding to the checkbox as well.
+    - Take off v-model and just bind task.completed to the checkbox's "value" property 
+
+
+
+----------------
+DELETE TASK - ADD DELETE BUTTON AND CONFIRM DIALOG  
+----------------
+1) Create action called deleteTask
+    deleteTask({commit}, payload)
+2) In the PageTodo create a delete button with a click handler 
+    - The click handler should trigger the deleteTask() action 
+    - Pass the task id as the payload for the action 
+3) Use some sort of dialog box from Quasar to trigger 
+    - This should be the thing that executes the action if the user confirms deleting the task 
+4) Create a mutation called deleteTask 
+    - Find the task using the payload.id 
+    - Remove the task from the state.tasks object 
+        - STRATEGY HERE 
+5) Commit the mutation in the deleteTask action 

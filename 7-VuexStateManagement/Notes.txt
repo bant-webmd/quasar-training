@@ -1,0 +1,88 @@
+----------------
+SET UP A VUEX STORE  
+----------------
+- Create Vuex store files in /store directory
+- Create store-tasks.js
+    - Create state object 
+        const state = {}
+    - Create mutations object 
+        const state = {}
+    - Create actions object 
+        - methods that reach out for data asynchronously go here 
+        - these methods also commit mutations which change the state object directly 
+    - Create getters object 
+        - contains methods which get the data from the state 
+        - These methods are then used by the components in our app
+    - export default object 
+        - The default export should have an extra property called namespaced. This should be set to true once you know the app will have multiple different store modules. 
+        export default {
+            namespaced: true, 
+            state,
+            mutations,
+            actions, 
+            getters
+        }
+    - import the "tasks" store in index.js 
+    - Add the tasks import to the modules in the index.js file 
+
+
+----------------
+ADD TASKS DATA TO THE VUEX STORE   
+----------------
+- Copy the tasks array from the PageTodo.vue file 
+    - Put these dummy tasks into the state. 
+
+
+----------------
+CREATE A GETTER FOR THE TASKS DATA    
+----------------
+- Getter should be a function 
+    tasks: (state) => {
+        return state.tasks; 
+    }
+
+- Delete the data object 
+
+GETTING STORE DATA OPTION 1: 
+- create a computed property called 'tasks' 
+  on PageTodo
+    - Call this.$store.getters['tasks/tasks'] in the computed property
+
+GETTING STORE DATA OPTION 2: Use mapGetters
+- import { mapGetters } from 'vuex' 
+- Then use the spread operator on the result of calling mapGetters. 
+    computed: {
+        ...mapGetters('tasks', ['tasks'])
+    }
+
+
+----------------
+CHANGE TASKS ARRAY INTO AN OBJECT STRUCTURE     
+----------------
+- IMPORTANT: 
+    - Firebase doesn't use arrays
+    - It only uses objects 
+        - Objects within objects within objects 
+    - So we have to restructure our data to resemble how it would 
+      be stored in Firebase. 
+
+1) Create object call tasks with each different tasks being a property on that tasks object. 
+
+2) Each property on tasks is a ID String that maps to a single task object. 
+
+3) You don't have to change much in the rendering because v-for will loop through an object as if it were an array. 
+    - In the v-for directive simply do the following: 
+    v-for="(task, key) in tasks"
+    - This gives us access to the object key which we can use on the 
+      :key binding. 
+
+
+----------------
+PUT TASK INTO CHILD COMPONENT     
+----------------
+1) Create components/Tasks/Task.vue
+    - Make the component take in a prop called "task" 
+2) Use the component on the PageTodo.vue 
+    - organize the page in a way that properly uses the child component 
+    - set :key="key" 
+    - pass :id="key" as a prop to the component 
