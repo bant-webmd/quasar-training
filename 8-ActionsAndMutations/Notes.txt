@@ -28,13 +28,42 @@ DELETE TASK - ADD DELETE BUTTON AND CONFIRM DIALOG
 ----------------
 1) Create action called deleteTask
     deleteTask({commit}, payload)
-2) In the PageTodo create a delete button with a click handler 
-    - The click handler should trigger the deleteTask() action 
-    - Pass the task id as the payload for the action 
+2) In the PageTodo create a delete button with a click handler
+    - Create another q-item-section 
+        - This should be after the date section
+        - Put the Rounded button with an icon inside of the item-section
+        - Put the dense prop so the button takes up less space 
+        - set icon="delete"
+        - set color="red"
+    - The click handler promptToDelete(id) should trigger the confirm prompt 
+        - Make sure to add .stop to stop propogation up to the parent's click handler.
 3) Use some sort of dialog box from Quasar to trigger 
     - This should be the thing that executes the action if the user confirms deleting the task 
-4) Create a mutation called deleteTask 
+    - There is a quasar plugin called dialog 
+        - Use the confirm dialog 
+        - To install you have to add it as a plugin in the quasar.conf.js 
+    - In the .onOk() callback 
+        - Trigger the delete action. 
+
+
+----------------
+DELETE TASK - DELETE TASK FROM THE STATE 
+----------------
+0) Call the deleteTask() action in the prompt  
+    - Pass the task id as the payload for the action 
+1) Create a mutation called deleteTask 
     - Find the task using the payload.id 
-    - Remove the task from the state.tasks object 
-        - STRATEGY HERE 
-5) Commit the mutation in the deleteTask action 
+2) Commit the mutation in the deleteTask action 
+3) Remove the task from the state.tasks object in the Mutation logic 
+    BAD SOLUTION (non-reactive): delete state.tasks[id]
+        - If you use this it won't update the view even though the object is removed from the state 
+        **** REASONING: Whenever you want to delete a keyed object from the state or add an object to the state you have to use built-in Vue methods to keep the object reactive.
+            - Basically Vue cannot detect property deletions 
+            - Since we're using Objects instead of arrays we need to use this approach. 
+    
+    GOOD SOLUTION: 
+        - import Vue from 'vue'
+        - Use: Vue.delete(state.tasks, id)
+            - This keeps the deletion with the proper observers and will maintain reactivity. 
+            - Function takes the object you wish to update and the second param is which key you wish to delete. 
+        - SETTING A PROPERTY: Adding new property to an object -> Vue.set
