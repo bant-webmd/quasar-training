@@ -31,6 +31,66 @@ ADD TASK - BUTTON & MODAL
 
 
 ----------------
-ADD THE FIELDS   
+ADD TASK - CUSTOMIZE THE MODAL    
 ----------------
-- 
+0) Set showAddTask to true for easy development 
+1) ADD CLOSE BUTTON AT THE TOP: 
+    - Grab Flat rounded button with an icon 
+    - Put the code underneath the heading in the first card-section 
+    - SETTINGS: 
+        flat 
+        round 
+        dense
+        icon="close"  
+2) ADD STYLING: 
+    - Put .row class on first q-card-section 
+        - This will make everything appear on one line 
+    - Put q-space component between button and "Add Task" header 
+        - This will separate the items in a row 
+3) ADD CLOSE POPUP DIRECTIVE: 
+    - This is a built-in quasar directive to close the modal 
+    - Add "ClosePopup" to directives in quasar.conf file 
+    - EXAMPLE:  <q-btn v-close-popup flat label="OK" color="primary" />
+4) Change OK button label to say "Save" 
+
+----------------
+ADD THE FIELDS 
+----------------
+1) CREATE DATA PROPERTY ON AddTask Component 
+    EXAMPLE: 
+        taskToSubmit: {
+            name: '',
+            dueDate: '',
+            dueTime: '', 
+            completed: false
+        }
+    - This will hold all the data bound to each form field we put on the card.  
+2) INSTALL FORM FIELD COMPONENTS: 
+    - QInput, QDate, QPopupProxy, QTime  
+3) COPY INPUT CODE FROM DOCS: 
+    - Use QInput the 'outlined' style one. 
+    - SETTINGS: 
+        outlined
+        v-model="taskToSubmit.name" 
+        label="Task name" 
+    - Paste input code into 2nd q-card-section 
+4) COPY DATE INPUT CODE FROM DOCS: 
+    - Use the one that has "With QInput" 
+    - Paste code under the name input but inside the same section 
+    - SETTINGS: q-input
+        outlined 
+        v-model="taskToSubmit.dueDate" 
+    - SETTINGS: q-date 
+        v-model="taskToSubmit.dueDate"
+5) COPY TIME PICKER CODE FROM DOCS: 
+    - Use the one that has "With QInput" 
+    - Paste code under the Date input 
+    - SETTINGS: (get rid of mask and rules)
+        outlined 
+        v-model="taskToSubmit.dueTime"
+6) SURROUND EACH QInput tag with a div.row.q-mb-sm 
+    - Just done for styling some margin in between each input 
+    - Afterwards add .col class to "task name" q-input 
+7) ADD LABELS TO DATE AND TIME FIELDS 
+    label="Due date"
+    label="Due time"
