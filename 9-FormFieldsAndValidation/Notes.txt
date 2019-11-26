@@ -1,0 +1,36 @@
+----------------
+ADD TASK - BUTTON & MODAL  
+----------------
+1) ADD BIG ROUND BUTTON AT THE BOTTOM OF THE LIST OF TASKS
+    - This button will be used to create new tasks 
+    - Put the code after the q-list on PageTodo 
+    - SETTINGS: 
+        color="primary"
+        size="24px"
+        icon="add"
+    - Wrap the button in a div.absolute-bottom.text-center 
+        - These two classes will help position the button at the bottom of the page and centered 
+    - Add padding to the div with the Quasar margin classes 
+        - EXAMPLES: q-mb-lg / q-mb-md 
+2) ADD DIALOG MODAL 
+    - Add Components: QDialog, QCard, QCardSection, QCardActions 
+    - Add Directive: ClosePopup 
+    - Grab markup for basic alert dialog 
+        - Paste code at the bottom of the PageTodo 
+    - SETTINGS: 
+        v-model="showAddTask"
+            - the v-model binding is used to show / hide the popup 
+            - It should be boolean (not shown if false)
+3) ADD CLICK HANDLER TO BUTTON
+    - Set showAddTask to true if button is clicked 
+4) MAKE Q-CARD ITS OWN CHILD COMPONENT OF Q-DIALOG 
+    - Create Folder components/Tasks/Modals
+    - Create AddTask.vue inside of this directory 
+    - Set up child component in PageTodo.vue  
+
+
+
+----------------
+ADD THE FIELDS   
+----------------
+- 
