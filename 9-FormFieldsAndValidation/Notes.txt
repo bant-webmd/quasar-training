@@ -53,6 +53,7 @@ ADD TASK - CUSTOMIZE THE MODAL
     - EXAMPLE:  <q-btn v-close-popup flat label="OK" color="primary" />
 4) Change OK button label to say "Save" 
 
+
 ----------------
 ADD THE FIELDS 
 ----------------
@@ -94,3 +95,58 @@ ADD THE FIELDS
 7) ADD LABELS TO DATE AND TIME FIELDS 
     label="Due date"
     label="Due time"
+
+
+
+----------------
+FORM VALIDATION AND SUBMISSION (REGULAR <form>)
+----------------
+- We have to add validation before we send the data to the Vuex store 
+
+- ADD VALIDATION ON THE "TASK NAME" INPUT: 
+    - The field should be required. 
+    - You can make it required by adding a "rules" prop 
+    EXAMPLE: 
+        :rules="[val => !!val || 'Field is required']"
+
+- ADD SUBMIT FUNCTIONALITY: non q-form (with a regular form)
+    - You should wrap all the fields in a QForm component 
+    - Put the q-section (with the fields) and the q-card-actions inside of the q-form 
+    - Create a method called submitForm() and trigger it via the form 
+        - Make sure to add @submit.prevent to form 
+        - This will prevent default "submit" event behavior 
+    - Add type="submit" 
+    SETTINGS: q-card-actions > q-btn 
+        flat
+        label="Save"
+        color="primary"
+        type="submit" 
+
+- ADD MORE VALIDATION 
+    - Add a ref to the "name" input 
+        - When you access the Vue component through the ref you can access all of its data properties, methods, etc.
+    - Then you can call validate() method inside of the submitForm() 
+    method
+        EXAMPLE: 
+            <q-input ... ref="name">
+        ...
+            submitForm() {
+                this.$refs.name.validate();
+                if (!this.$refs.name.hasError) {
+                    this.submitTask();
+                }
+            },
+            submitTask() {
+                // Submit task data to store                 
+            }
+
+
+----------------
+FORM VALIDATION AND SUBMISSION (QForm & QField)
+----------------
+- By using QForm you can automatically trigger internal validation (:rules) upon @submit or @reset. 
+    - To do this simply have a button in the form that has type="submit" or type="reset"
+
+*** Alternatively, you can give the QForm a Vue ref name and call the validate and resetValidation functions directly on the whole form.
+
+- You can also wrap custom controls in QField so that they have access to their own :rules prop which will then be triggered by QForm validation. 
