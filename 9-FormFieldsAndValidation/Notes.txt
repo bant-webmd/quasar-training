@@ -150,3 +150,59 @@ FORM VALIDATION AND SUBMISSION (QForm & QField)
 *** Alternatively, you can give the QForm a Vue ref name and call the validate and resetValidation functions directly on the whole form.
 
 - You can also wrap custom controls in QField so that they have access to their own :rules prop which will then be triggered by QForm validation. 
+
+
+----------------
+VUEX - ADD TASK WHEN FORM SUBMITTED 
+----------------
+1) CREATE AN ACTION: 
+    - Create addTask({commit}, task) action on Vuex store. 
+        - Add task needs both a task and a unique ID. 
+        - Create the unique ID in the action itself
+            - Quasar comes with a utility for generating a unique ID 
+            - This function generates a string of numbers/letters separated by dashes. 
+                import { uid } from 'quasar'
+                let uid = uid();        
+        - send payload to the corresponding addTask() mutation 
+        - payload for mutation: 
+            {
+                id: taskId,
+                task: task 
+            }
+2) CREATE MUTATION TO ALTER THE STATE 
+    - Use Vue.set(<stateProperty>, <stateProperty.key>, <stateProperty.keyValue>)
+        - EXAMPLE: 
+            Vue.set(state.tasks, payload.id, payload.task);
+3) TRIGGER THE ACTION: Trigger action inside of submitTask()
+    - Map the actions 
+        import { mapActions } from 'vuex' 
+        ...
+        methods: {
+            ...mapActions('tasks', ['addTask'])
+        }
+    - Call the action and pass it the taskToSubmit 
+4) CLOSE THE DIALOG AFTER SUCCESSFULLY ADDING TASK 
+    - Create a custom event and emit it
+        - Emit the 'close' event from the submitTask() method after calling action. 
+    - Listen to the event on the add-task component (within the parent page)
+        - Handler should simply set showAddTask to false. 
+5) Remove dummy tasks in the state object 
+
+
+----------------
+A FEW IMPROVEMENTS 
+----------------
+1) ADD AUTOFOCUS TO THE NAME INPUT 
+2) GET RID OF LIST BORDER IF NO TASKS 
+3) ONLY SHOW DUE TIME IF DUE DATE IS ENTERED
+4) REMOVE CALENDAR ICON IF NO DUE DATE  
+5) ADD CLEAR BUTTON FOR INPUTS 
+    - Add "clearable" prop to inputs 
+
+
+
+
+
+
+
+
