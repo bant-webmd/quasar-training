@@ -1,0 +1,129 @@
+----------------
+ADD TASK - REUSABLE COMPONENTS (MODAL HEADER)  
+----------------
+1) Set Show Add Task to True 
+2) Make Child component of AddTask.vue Header 
+    - Cut the q-card-section 
+    - Paste in Modals/Shared/ModalHeader.vue  
+    - register component as 'modal-header' in AddTask.vue 
+3) Create Slot inside div.text-h6 
+    - This slot will make the header title dynamic 
+        
+
+----------------
+ADD TASK - REUSABLE COMPONENTS (TASK NAME)  
+----------------
+1) Make Child component of name input 
+    - Cut div.row.q-mb-sm that contains "name" input 
+    - Paste in Modals/Shared/ModalTaskName.vue 
+    - register component as 'modal-task-name' in AddTask.vue 
+2) Pass down Prop data as necessary 
+    - Create :name prop on ModalTaskName.vue 
+    - Pass taskToSubmit.name to this prop 
+3) Rebind data as necessary 
+    - Since we are using a prop for the name value we can use v-model anymore to bind 
+    OPTION 1: Use method to emit event payload to parent 
+        - Instead we should bind to :value and use @input handler to trigger updates to v-model on the parent (AddTask.vue)
+    OPTION 2: .sync
+        - Emit an "update" event upon @input on the input 
+        - The parent will then respond to the update event AND rebind the value in its data using the .sync modifier
+        EXAMPLE: 
+            <q-input
+            ...
+            :value="name"
+            @input="$emit('update:name', $event)"
+            ...
+            >
+
+            // Parent 
+            <modal-task-name
+                :name.sync="taskToSubmit.name"
+            > 
+
+----------------
+ADD TASK - REUSABLE COMPONENTS (DUE DATE)  
+----------------
+1) Cut Due date <div> 
+2) Create Shared/ModalDueDate.vue
+3) Paste info and register component 'modal-due-date'
+4) Rebind taskToSubmit.dueDate to dueDate prop as necessary 
+    - Use the sync method to bind down to the prop as we did with the :name prop 
+    - Add @input listener on child 
+    - Do this for both q-input and q-date 
+5) Emit "clear" event on child 
+    - Then add handler that triggers clearDueDate on the parent 
+
+
+----------------
+ADD TASK - REUSABLE COMPONENTS (DUE TIME)  
+----------------
+1) Cut Due time <div> 
+2) Create Shared/ModalDueTime.vue
+3) Paste info and register component 'modal-due-time'
+    - Put v-if="taskToSubmit.dueTime" on the modal-due-time tag
+4) Rebind taskToSubmit.dueTime dueTime prop as necessary 
+    - Use the sync method to bind down to the prop as we did with the :name prop 
+    - Add @input listener on child 
+    - Do this for both q-input and q-time 
+5) Emit "clear" event on child 
+    - Then add handler that triggers clearDueTime on the parent 
+
+
+----------------
+ADD TASK - REUSABLE COMPONENTS (BUTTONS)  
+----------------
+1) Cut the q-card-actions and put it in Shared/ModalButtons.vue 
+2) Register component 'modal-buttons' as needed 
+3) For Validate Error / Refs error  
+    - The input ref doesn't exist on the parent anymore
+    - How can we access it via parent? 
+        - Add another ref to parent called "modalTaskName" and dig down from there. 
+    EXAMPLE: Change the following...
+        this.$refs.name -> this.$refs.modalTaskName.$refs.name 
+
+
+----------------
+EDIT TASK - ADD THE BUTTON AND SHOW THE MODAL   
+----------------
+1) Uncomment dummy tasks in store file 
+    - Add data prop to PageTodo.vue 
+2) Add edit button on the Task.vue component  
+    - Duplicate the delete task button and put the edit button before the delete one 
+    - Make a div.row wrapper for both buttons 
+        - This will make them side-by-side 
+    SETTINGS: 
+        color="primary"
+        icon="edit" 
+        @click="showEditTask=true"
+3) Create Modals/EditTask.vue 
+    - Just duplicate AddTask.vue 
+4) Add q-dialog to Task.vue similarly to how it is used in PageTodo.vue 
+    - v-model="showEditTask"
+    - @close="showEditTask = false"
+
+
+----------------
+EDIT TASK - CUSTOMISE AND SET UP THE MODAL 
+----------------
+- When the user clicks on the edit button we want to load the task information into the "Edit Task" form. 
+    - Basically we want to assign values from the PageTodo task to the EditTask.taskToSubmit
+
+1) Add props to EditTask as needed. 
+    - Pass down task to the EditTask component as a prop 
+    - Pass down id as a prop as well 
+2) Create mounted hook 
+    - Inside hook use Object.assign() to copy the properties of the task prop to an empty object. 
+    - Afterwards assign this object to the data property this.taskToSubmit 
+3) Call updateTask action upon clicking save() 
+    - Map the action to the component 
+    - Call it inside of submitTask() method 
+    EXAMPLE: 
+        this.updateTask({
+            id: this.id,
+            updates: this.taskToSubmit 
+        })
+
+
+----------------
+EXERCISE 
+----------------

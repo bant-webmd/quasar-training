@@ -1,7 +1,7 @@
 <template>
 	<!-- <q-card style="width: 300px;"> -->
     <q-card style="width: 300px;">
-		<modal-header>Add Task</modal-header>
+		<modal-header>Edit Task</modal-header>
 		<q-form ref="myForm" @submit="submitForm">
 			<q-card-section>
 				<modal-task-name
@@ -57,17 +57,17 @@ export default {
 			}
 		};
 	},
+	props: ['id', 'task'],
 	components: {
 		'modal-header': ModalHeader,
 		'modal-task-name': ModalTaskName
 	},
     methods: {
-        ...mapActions('tasks', ['addTask']),
+        ...mapActions('tasks', ['updateTask']),
         submitForm() {
             this.$refs.myForm.validate().then(success => {
                 if (success) {
-                    // yay, models are correct
-                    console.log("Form Submitted and is valid");
+                    // console.log("Form Submitted and is valid");
                     this.submitTask(this.taskToSubmit);
                 }
                 else {
@@ -77,14 +77,20 @@ export default {
             })
         },
         submitTask(task) {            
-            this.addTask(task);
+            this.updateTask({
+				id: this.id,
+				updates: task 
+			});
             this.$emit('close');
-            console.log("Submitted Task to the store");
+            // console.log("Submitted Task to the store");
         },
         clearDueDate() {
             this.taskToSubmit.dueDate = '';
             this.taskToSubmit.dueTime = '';
         }
-    }
+	},
+	mounted() {
+		this.taskToSubmit = Object.assign({}, this.task);
+	}
 };
 </script>
