@@ -1,14 +1,16 @@
 <template>
   <q-page padding>
-    <q-list v-if="Object.keys(tasks).length > 0" separator bordered>
-      <!-- <q-item-label header>Tasks</q-item-label> -->
-      <task
-        v-for="(task, key) in tasks"
-        :key="key"
-        :id="key"
-        :task="task"
-      ></task>
-    </q-list>
+    <no-tasks
+      v-if="!Object.keys(tasksTodo).length"
+    ></no-tasks>
+    <tasks-todo
+      v-else
+      :tasksTodo="tasksTodo"
+    >Todo</tasks-todo>
+    <tasks-complete
+      v-if="Object.keys(tasksComplete).length"
+      :tasksComplete="tasksComplete"
+    >Completed</tasks-complete>
     <div class="absolute-bottom text-center q-mb-lg">
       <q-btn 
         round
@@ -29,8 +31,10 @@
 
 <script>
 import {mapGetters} from 'vuex';
-import Task from '../components/Tasks/Task.vue';
 import AddTask from '../components/Tasks/Modals/AddTask.vue';
+import TasksTodo from '../components/Tasks/TasksTodo.vue';
+import TasksComplete from '../components/Tasks/TasksComplete.vue';
+import NoTasks from '../components/Tasks/NoTasks.vue';
 
 export default {
   data() {
@@ -39,8 +43,10 @@ export default {
     }
   },
   components: {
-    'task': Task,
-    'add-task': AddTask
+    'add-task': AddTask,
+    'tasks-todo': TasksTodo,
+    'tasks-complete': TasksComplete, 
+    'no-tasks': NoTasks
   },
   computed: {
     // tasks() {
@@ -48,7 +54,12 @@ export default {
     // }
     // Map getters from 'tasks' module 
     // then specify which getters in the array
-    ...mapGetters('tasks', ['tasks'])
+    ...mapGetters('tasks', ['tasksTodo', 'tasksComplete'])
+  },
+  mounted() {
+    this.$root.$on('showAddTask', () => {
+      this.showAddTask = true;
+    })
   }
 }
 </script>

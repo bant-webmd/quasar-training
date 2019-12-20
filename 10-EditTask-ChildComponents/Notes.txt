@@ -125,5 +125,5 @@ EDIT TASK - CUSTOMISE AND SET UP THE MODAL
 
 
 ----------------
-EXERCISE 
+EXERCISE - FOOD GALLERY / RATINGS 
 ----------------

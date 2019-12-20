@@ -1,0 +1,119 @@
+----------------
+CREATE GETTERS FOR TODO AND COMPLETED TASKS - DONE 
+----------------
+- GOAL: We want to create a separate list of rendered tasks for ones that are completed. 
+    - We're going to create some useful getters to retrieve data accordingly 
+    - We're going to add a banner that shows if "no tasks are due" 
+
+CREATING GETTERS: 
+1) Current getter is "tasks" -> Rename this to tasksTodo
+    - This will break the app in various places (wherever mapGetters is called)
+2) Modify tasksTodo so that it only shows the tasks that ARE NOT COMPLETE 
+    - Make an object 
+    - Object.keys(state.tasks) 
+        - This will provide the IDS for each 
+    - Use forEach() to loop over the keys and check each task to see if it passes the predicate.
+        - if (!task.completed) -> add it onto the empty object 
+            result[key] = task
+    - Return the object. 
+3) Create new getter -> tasksCompleted 
+    - Same definition as the tasksTodo except with the opposite predicate. 
+
+
+
+----------------
+DISPLAY TODO AND COMPLETED TASKS IN SEPARATE LISTS - DONE  
+----------------
+1) Render Completed Todos seperately In PageTodo.vue 
+    - Duplicate q-list that renders tasksTodo
+    - Insert <hr> in between them 
+    - Make the duplicate loop through tasksCompleted instead 
+2) Create separate Child components for tasksTodo 
+    - 'tasks-todo': components/Tasks/TasksTodo.vue 
+        - Put the q-list as the root element 
+        - Update imports and everything accordingly
+        - pass array of todos via props 
+3) Create separate Child components for tasksCompleted 
+    - 'tasks-todo': components/Tasks/TasksCompleted.vue 
+        - Put the q-list as the root element 
+        - Update imports and everything accordingly
+        - pass array of todos via props 
+
+
+
+----------------
+ADD HEADINGS TO THE TASK LISTS - DONE 
+----------------
+1) Add q-banner component to TasksTodo.vue 
+    - Copy the dense inline-actions with bg-red from documentation 
+    - Paste at the top of the component
+    - Wrap everything in root <div> for quieting error 
+    - Delete Wifi button from inside banner 
+    - Put text as "Todo" inside of <span class="text-bold text-subtitle1"></span>
+    - SETTINGS: 
+        dense 
+        inline-actions 
+        class="list-header text-white bg-orange-4 text-center"
+2) Create Components/Shared/ListHeader.vue
+    - Put the banner component into this child component 
+        - Component will be used in TasksComplete as well. 
+    - Define .list-header CSS as: 
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    - Make "Todo" text dynamic by making it a <slot></slot> 
+
+
+----------------
+MAKE THE HEADING BACKGROUND COLOR ADJUSTABLE - DONE 
+----------------
+1) Remove background color class from list-header component 
+2) Create a prop bgColor and pass the class name accordingly
+    - :class="bgColor"
+    - For TasksTodo bg-orange-4
+    - For TasksCompleted bg-green-4
+3) Remove <hr> in between the two lists 
+4) Add class="q-mt-lg" to the wrapper div on TasksCompleted 
+
+
+----------------
+CONDITIONALLY SHOW & HIDE THE TASK LISTS - DONE 
+----------------
+1) Add v-if="Object.keys(tasksTodo).length" to tasks-todo on PageTodo.vue
+2) Add v-if="Object.keys(tasksCompleted).length" to tasks-completed on PageTodo.vue
+
+
+----------------
+ADD A "NO TASKS TO DO TODAY!" BANNER - DONE 
+----------------
+1) Create Tasks/NoTasks.vue 
+    - This will be displayed when there are no tasksTodo 
+    - Grab banner with the Wifi from the quasar documentation
+    - Register and use child component on PageTodo.vue 
+    - place v-if="!Object.keys(tasksTodo).length"
+        - Then replace existing v-if with v-else 
+2) Change icon from Wifi to a Checkmark
+    - change name attribute on q-icon to: name="check"
+3) Change text to "No tasks to do today!"
+4) Change button in NoTasks banner to "Add Task" 
+
+
+----------------
+USE GLOBAL EVENT BUS TO FIX THE "NO TASKS BANNER" BUTTON - DONE 
+----------------
+- QUASAR GLOBAL EVENT BUS: 
+    - Instead of piecemeal events which are easy to break 
+        - We should emit events that ALL our components can listen to. 
+        - EVEN BETTER: USE VUEX 
+            - We can manage the showAddTask property as a piece of application state. 
+            - And use actions and mutations on the Vuex store 
+    - Go to Quasar Options & Helpers for "Global Event Bus" documentation 
+    - EMIT GLOBALLY: 
+        this.$root.$emit('name_of_event')
+    - LISTEN GLOBALLY: 
+        this.$root.$on('name_of_event', callback)
+
+1) Add @click="$root.emit('showAddTask')" to Add Task button 
+2) Create mounted() hook for PageTodo.vue 
+    - Set up listener to the global event -> this.$root.$on()
+    - Make the listener set showAddTask=true
+
