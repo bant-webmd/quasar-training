@@ -1,0 +1,90 @@
+----------------
+ADD THE SEARCH BAR MARKUP 
+----------------
+1) Create components/Tasks/Tools/Search.vue
+2) Register the component in PageTodo.vue 
+    - Put the component at the very top of the page. 
+3) Grab an input element from Quasar.dev 
+    - Use outlined one with the Search icon 
+4) Paste into the Search.vue template 
+    - SETTINGS: 
+        outlined
+        class="col"
+        v-model="searchField"
+        label="Search"
+    - Get rid of flight icon 
+    - Get rid of hint 
+    - Keep the v-slot:append icon for the search icon 
+5) Adjust data props and other template references as needed
+6) Wrap the search component in div.row.q-mb-lg 
+
+
+----------------
+CONNECT SEARCH BAR TO VUEX STATE WITH MAPSTATE 
+----------------
+1) Create Vuex state property called search 
+2) Reference it in the component via mapState 
+    - works the same as mapGetters & mapActions
+    - Use this (instead of getters) since we aren't doing any manipulation to the data 
+    - Call mapState in computed: {}
+3) Without a setter this will cause a console error 
+
+
+----------------
+USE A COMPUTED PROPERTY SETTER TO SET VUEX SEARCH VALUE 
+----------------
+- Break out the computed property into two separate functions 
+    - By default if a computed prop is a function it will be treated as the "getter" 
+    - However if it is an object you get define the getter and setter: 
+EXAMPLE: 
+    computed: {
+        //normal 
+        thing() {
+            return this.thing1 * 2;
+        },
+        // with getter and setter 
+        getSet: {
+            get() {
+                // return Vuex getter here              
+            },
+            set() {
+                // Call Vuex mutation/action here
+            }
+        }
+    }
+
+
+----------------
+SETUP AN ACTION AND MUTATION TO SET THE SEARCH PROPERTY 
+----------------
+1) Set up action and mutation setSearch() 
+2) In action just commit the mutation 
+3) In mutation just do: state.search = value; 
+4) Dispatch action in setter function 
+    - Use mapActions() 
+    - OR use this.$store.dispatch('<module>/<action>', payload, {root: true})
+        - root:true is needed if namespaced:true module. 
+
+
+----------------
+FILTER THE TASKS BASED ON SEARCH VALUE - DONE 
+----------------
+- SEARCH STRATEGY: 
+    - Create new getter that matches the search query that the user has entered
+        - Then pass the results of this getter to the other getters 
+
+- Create tasksFiltered(state) getter 
+    - Set up an empty object and populate that object with results 
+    - Convert task.name and state.search to both be lowercase 
+    - If (state.search) -> Populate object 
+        - If nothing in searchbar return all the tasks. 
+- Populate the tasksFiltered object 
+    - Check if the name property of each task .includes(state.search)
+    - If it does include add the task to the object. 
+- Update other getters to use tasksFiltered as their base value.
+
+
+----------------
+DISPLAY "NO SEARCH RESULTS" & HIDE THE "NO TASKS TODAY" BANNER
+----------------
+- Add v-if accordingly to the PageTodo.vue elements 
