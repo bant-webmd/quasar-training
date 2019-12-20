@@ -1,0 +1,106 @@
+----------------
+ADD SORTING GETTER TO VUEX STORE 
+----------------
+- We want to add a sort dropdown right next to the search bar 
+    - They should be able to sort by name or date 
+
+1) Create tasksSorted getter in Vuex 
+    1a) This is going to work a bit like the other getters 
+    1b) Compile a sorted array of keys (based on name)
+        - Grab the keys and then sort them based on the name property. 
+        - Run sort function on the array of keys 
+        - Be sure to convert names toLowerCase() 
+            - lowercase letters have greater value than uppercase.
+        .sort((a, b) => {
+            // It will loop through the keys and compare them one at a time 
+            // need to return a positive, negative, or neutral value
+            // If positive b goes in front of a 
+            // If negative b goes after a  
+            // If neutral value (0) leave them in place 
+            if (taskAProp > taskBProp) {
+                return 1;
+            } else if (taskAProp < taskBProp) {
+                return -1;
+            } else {
+                return 0;
+            }
+        })
+    1c) Populate an empty object and return it at the end
+        - Now take the orderedKeys and use them to populate the new object with the tasks.
+        - It will be populated in the appropriate order this way. 
+2) Use tasksSorted getter as the base object for tasksFiltered. 
+
+
+----------------
+MAKE THE SORT CRITERIA CONFIGURABLE
+----------------
+- We want to be able to sort by dueDate as well!
+
+1) Add a new state property -> sort: 'name'
+    - If you want to sort by Date just do -> sort: 'dueDate'
+2) In the tasksSorted getter definition use this property to choose the property we are sorting against. 
+
+
+----------------
+ADD A SORT DROPDOWN COMPONENT TO THE PAGE 
+----------------
+- We want the component to change the state.sort property 
+
+1) Create /Tools/Sort.vue 
+    - Put the sort component right after search component on PageTodo.vue 
+        - register component as well
+    - Install QSelect and grab some example code from the Quasar.dev documentation 
+    - Make sure to grab the script that goes with it and paste it in Sort.vue 
+2) Set up q-select accordingly 
+    - SETTINGS: 
+        filled 
+        v-model="model"
+        :options="options"
+        class="col q-ml-sm"
+        label="Sort by"
+        stack-label
+    - .q-select styles -> Make it scoped  
+        flex: 0 0 112px;
+
+
+----------------
+SORT DROPDOWN - CONFIGURE THE OPTIONS 
+----------------
+BASIC SOLUTION
+- options: ['Name', 'Date']
+    - This won't work because it doesn't match the values in state
+
+REAL SOLUTION: 
+1) We need to use objects for each option 
+2) EXAMPLE: 
+options: [
+    {
+        label: 'Name',
+        value: 'name'
+    },
+    {
+        label: 'Date',
+        value: 'dueDate'
+    }
+]
+3) Add emit-value to the component as a prop 
+    - This will ensure that the value assigned to sortBy will ONLY be the value of the option (not the whole object)
+4) Add map-options to make the sortBy display the label instead of the value. 
+
+
+----------------
+LINK THE SORT DROPDOWN TO THE VUEX STORE STATE 
+----------------
+- Import mapState from vuex 
+- Replace sortBy data property with a computed property 
+    - The computed property should get and set the state.sort property 
+    - You need to define a getter and setter since we are using v-model/2-way binding on that property. 
+- Get method: 
+    return this.sort 
+- Create an action called setSort() 
+    - Just commit corresponding mutation 
+    - In mutation setSort(state, value)
+        state.sort = value;
+- mapAction('setSort')
+- Set method: 
+    - dispatch/call setSort action. 
