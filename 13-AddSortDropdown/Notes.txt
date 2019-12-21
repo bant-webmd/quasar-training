@@ -1,5 +1,5 @@
 ----------------
-ADD SORTING GETTER TO VUEX STORE 
+ADD SORTING GETTER TO VUEX STORE - DONE 
 ----------------
 - We want to add a sort dropdown right next to the search bar 
     - They should be able to sort by name or date 
@@ -32,7 +32,7 @@ ADD SORTING GETTER TO VUEX STORE
 
 
 ----------------
-MAKE THE SORT CRITERIA CONFIGURABLE
+MAKE THE SORT CRITERIA CONFIGURABLE - DONE 
 ----------------
 - We want to be able to sort by dueDate as well!
 
@@ -42,7 +42,7 @@ MAKE THE SORT CRITERIA CONFIGURABLE
 
 
 ----------------
-ADD A SORT DROPDOWN COMPONENT TO THE PAGE 
+ADD A SORT DROPDOWN COMPONENT TO THE PAGE - 
 ----------------
 - We want the component to change the state.sort property 
 
@@ -64,7 +64,7 @@ ADD A SORT DROPDOWN COMPONENT TO THE PAGE
 
 
 ----------------
-SORT DROPDOWN - CONFIGURE THE OPTIONS 
+SORT DROPDOWN - CONFIGURE THE OPTIONS - DONE 
 ----------------
 BASIC SOLUTION
 - options: ['Name', 'Date']
@@ -89,7 +89,7 @@ options: [
 
 
 ----------------
-LINK THE SORT DROPDOWN TO THE VUEX STORE STATE 
+LINK THE SORT DROPDOWN TO THE VUEX STORE STATE - DONE 
 ----------------
 - Import mapState from vuex 
 - Replace sortBy data property with a computed property 

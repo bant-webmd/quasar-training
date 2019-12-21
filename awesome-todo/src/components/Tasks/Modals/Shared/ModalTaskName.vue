@@ -5,6 +5,7 @@
 			clearable
 			outlined
 			autofocus
+            v-select-all
             :value="name"
             @input="updateValue"
 			:rules="[val => !!val || 'Field is required']"
@@ -13,6 +14,8 @@
 </template>
 
 <script>
+import { selectAll } from 'src/directives/directive-select-all';
+
 export default {
     props: ['name'],
     methods: {
@@ -20,6 +23,9 @@ export default {
             // console.log(value);
             this.$emit('update:name', value);
         }
+    },
+    directives: {
+        selectAll
     }
 };
 </script>

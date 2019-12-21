@@ -43,10 +43,10 @@
 
 <script>
 import { mapActions } from 'vuex';
-import ModalHeader from './Shared/ModalHeader.vue';
-import ModalTaskName from './Shared/ModalTaskName.vue';
+import mixinAddEditTask from 'src/mixins/mixin-add-edit-task';
 
 export default {
+	mixins: [mixinAddEditTask],
 	data() {
 		return {
 			taskToSubmit: {
@@ -57,33 +57,12 @@ export default {
 			}
 		};
 	},
-	components: {
-		'modal-header': ModalHeader,
-		'modal-task-name': ModalTaskName
-	},
     methods: {
         ...mapActions('tasks', ['addTask']),
-        submitForm() {
-            this.$refs.myForm.validate().then(success => {
-                if (success) {
-                    // yay, models are correct
-                    console.log("Form Submitted and is valid");
-                    this.submitTask(this.taskToSubmit);
-                }
-                else {
-                    // oh no, user has filled in
-                    // at least one invalid value
-                }
-            })
-        },
         submitTask(task) {            
             this.addTask(task);
             this.$emit('close');
             console.log("Submitted Task to the store");
-        },
-        clearDueDate() {
-            this.taskToSubmit.dueDate = '';
-            this.taskToSubmit.dueTime = '';
         }
     }
 };

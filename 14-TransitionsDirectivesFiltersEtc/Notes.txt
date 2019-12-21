@@ -1,0 +1,202 @@
+----------------
+CUSTOM DIRECTIVE - SELECT ALL TEXT IN INPUT WHEN SELECTED - DONE 
+----------------
+- It'll be good if the text in the input is automatically highlighted so that the user can add an entirely new task straightaway 
+
+1) Go to Tasks/Modals/Shared/ModalTaskName.vue
+    - Add v-select-all to the q-input
+2) Create the directive
+    - Add this to the Vue instance: 
+        directives: {
+            selectAll: {
+                inserted(el) {
+                    // el in this case refers to the outer div 
+                    // Get a reference to the actual input 
+                    let input = el.querySelector('.q-field__native');
+                    input.addEventListener('focus', () => {
+                        if (input.value.length > 0) {
+                            input.select();
+                        } 
+                    });
+                }
+            }
+        }
+
+
+----------------
+CUSTOM DIRECTIVE - MAKE IT GLOBAL - DONE 
+----------------
+- What if we want the directive to be accessible globally? 
+
+1) Create src/directives/directive-select-all.js 
+    - Cut the directive code and paste it here 
+    - EXAMPLE: 
+    export const selectAll = {
+        inserted(el) {
+            ...
+        }
+    }
+2) Import the directive in ModalTaskName.vue 
+    import {selectAll} from 'src/directives/directive-select-all'
+
+    directives: {
+        selectAll
+    }
+
+3) Add it to the search bar 
+    - Import it and add the directive to Search.vue q-input 
+
+
+----------------
+CLEAR THE SEARCH FIELD WHEN ESC IS PRESSED - DONE 
+----------------
+- Add a @keyup.esc handler 
+    - in it set searchField=''
+
+
+----------------
+CLICK AND HOLD A TASK TO EDIT WITH V-TOUCH-HOLD DIRECTIVE - DONE 
+----------------
+1) Go to Vue Directives > Touch Hold directive on Quasar.dev 
+    - This will trigger an event when a user clicks and holds on an element 
+    - We can add this to our tasks 
+        -> After 2 seconds open up the Edit modal 
+2) Add it to Task.vue 
+    - Add the directive to q-item component 
+        v-touch-hold:1000.mouse="showEditTaskModal"
+3) Add this Directive to config file directives array -> 'TouchHold'
+4) Create showEditTaskModal method 
+    - In it set this.showEditTask = true;
+5) Call this method elsewhere in the component as needed 
+
+
+----------------
+FILTER - FORMAT THE DATE NICELY - DONE 
+----------------
+1) Create a filter to change the format of the date in Task.vue 
+    import { date } from 'quasar'; 
+    const { addToDate, formatDate } = date;
+
+    ...
+    filters: {
+        niceDate(value) {
+            // Quasar has some date utilities 
+            return formatDate(value, 'MMM D')
+        }
+    }
+    ...
+
+2) Apply the filter: task.dueDate | niceDate  
+
+
+----------------
+FILTER - HIGHLIGHT THE SEARCH QUERY ON MATCHING TASKS - DONE  
+----------------
+- GOAL: Wrap the matching word with a <span> that has a background color 
+    - EXAMPLE: <span class="bg-yellow-6">apple</span>
+
+1) Go to Task.vue
+    - Add a filter to the task name called searchHighlight() 
+2) Map the Vuex search state property to the component so that it is usable 
+    - Use mapState in the computed object 
+    - Get the 'search' property 
+3) Pass the search property to the filter: searchHighlight(search)
+4) Define the filter 
+    searchHighlights(value, search) {
+        if (search) {
+            // Make regex global and case-insensitive 
+            let searchRegExp = new RegExp(search, 'ig');
+            // replace second parameter can be a function to handle the match 
+            return value.replace(searchRegExp, (match) => {
+                return `<span class="bg-yellow-6">${match}</span>`
+            })
+        }
+        return value; 
+    }
+5) Use the filter to output HTML 
+    - To do this we can't call the filter using {{ }} 
+    - We have to call the filter inside of the v-html directive 
+    EXAMPLE: 
+        v-html="$options.filters.searchHighlight(task.name, search)"
+
+
+----------------
+COMBINE DUPLICATED CODE ON ADD / EDIT TASK INTO MIXIN - DONE 
+----------------
+- GOAL: Cut out the methods and components and place them in a mixin 
+
+1) Create src/mixins/mixin-add-edit-task.js 
+    export default {
+        // paste the relevant objects here.. 
+    }
+    - Cut components and methods that are duplicated 
+2) Import and use the mixin 
+    import mixinAddEditTask from 'src/mixins/mixin-add-edit-task'
+    export default {
+        ... 
+        mixins: [mixinAddEditTask]
+        ...
+    }
+
+
+----------------
+TRANSITIONS - ANIMATE THE SHOWING & HIDING OF COMPONENTS - DONE
+----------------
+1) Quasar.dev -> Options and Helpers -> Animations 
+    - Quasar has some animated transition helpers that we can use easily 
+    - They give us the vue-transition component 
+
+2) Install the animations to quasar.conf 
+    - Specify them here -> animations: ['zoomOut', 'zoomIn']
+3) Use the transition component to apply animations 
+    - Open TasksComplete.vue 
+        - Wrap the entire wrapper div in a <transition></transition> 
+        - SETTINGS: 
+            appear 
+            enter-active-class="animated zoomIn"
+            leave-active-class="animated zoomOut"
+    - Do the same to TasksTodo.vue EXCEPT:  
+        - SETTINGS: 
+            leave-active-class="animated zoomOut absolute-top"
+    - Do the same animation to the NoTasks.vue 
+4) Create new div containers with position:relative 
+    - This is so that the absolute-top positioning can use it. 
+    - div.relative-position 
+        - Wrap <no-tasks> <tasks-todo> and <tasks-completed> in the PageTodo.vue 
+
+
+----------------
+ADD A SCROLL AREA - DONE 
+----------------
+1) When we add more Todo items we have things breaking 
+    - The new task button is obfuscated and the top options are when we scroll down. 
+    - A scrollable container would solve this problem 
+
+2) Copy scroll-area code from Quasar.dev 
+    - Grab the basic one 
+    - Install the component to the config 
+    - Replace the wrapper div (the one with relative styling) with the q-scroll-area 
+        - This will now contain -> tasks-todo, tasks-complete, & no-tasks  
+3) Now we have to resize the q-scroll-area to better contain the information. 
+    - q-scroll has props to enter height/width 
+    - We shouldn't give static values for size though 
+    - It needs to be responsive 
+        - remove q-pa-md from <q-page> 
+        - We'll need a new div wrapper around everything in PageTodo.vue inside <q-page> (except <q-dialog>)
+        - SHOULD BE: div.q-pa-md.absolute.full-width.full-height.column 
+4) Add class to q-scroll-area to add flexbox styles to it 
+    q-scroll-area-tasks {
+        display: flex;
+        flex-grow: 1;
+    }
+5) Add margin class to tasks-completed -> q-mb-lg  
+
+
+----------------
+ENABLE CLICKING BESIDE THE ADD TASK BUTTON - DONE 
+----------------
+- Fix Add Task button / 1 Completed task issue
+    - Basically you can't click the task if it is behind the add task button 
+    - Just put "no-pointer-events" class on the div wrapping the button 
+        - This is built into quasar but will disable all pointer events for children 
+    - Put "all-pointer-events" on child button -> re-enables button 

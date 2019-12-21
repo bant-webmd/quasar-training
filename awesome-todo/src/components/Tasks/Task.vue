@@ -1,5 +1,6 @@
 <template>
   <q-item
+    v-touch-hold:1000.mouse="showEditTaskModal"
     clickable
     v-ripple
     @click="updateTask({id: id, updates: {completed: !task.completed}})"
@@ -10,7 +11,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label :class="{'text-strikethrough': task.completed}">{{task.name}}</q-item-label>
+      <q-item-label :class="{'text-strikethrough': task.completed}" v-html="$options.filters.searchHighlight(task.name, search)"></q-item-label>
     </q-item-section>
 
     <q-item-section side top v-if="task.dueDate">
@@ -19,7 +20,7 @@
           <q-icon name="event" class="q-mr-md" />
         </div>
         <div class="column">
-          <q-item-label class="row justify-end" caption>{{task.dueDate}}</q-item-label>
+          <q-item-label class="row justify-end" caption>{{task.dueDate | niceDate}}</q-item-label>
           <q-item-label class="row justify-end" caption>
             <small>{{task.dueTime}}</small>
           </q-item-label>
@@ -43,7 +44,7 @@
             dense 
             color="primary" 
             icon="edit" 
-            @click.stop="showEditTask = true"
+            @click.stop="showEditTaskModal"
           />
       </div>
     </q-item-section>
@@ -51,14 +52,18 @@
       <edit-task 
         :id="id"
         :task="task"
-        @close="showEditTask=false"></edit-task>
+        @close="closeEditTaskModal"></edit-task>
     </q-dialog>
   </q-item>
 </template>
 
 <script>
 import {mapActions} from 'vuex';
+import {mapState} from 'vuex';
 import EditTask from './Modals/EditTask.vue';
+import { date } from 'quasar';
+
+const { addToDate, formatDate } = date; 
 
 export default {
   data() {
@@ -69,7 +74,22 @@ export default {
   components: {
     'edit-task': EditTask
   },
+  filters: {
+    niceDate(value) {
+      return formatDate(value, 'MMM Do');
+    },
+    searchHighlight(value, search) {
+      var searchRegex = new RegExp(search, 'gi');
+      return value.replace(searchRegex, (match) => {
+        return `<span class="bg-yellow-6">${match}</span>`
+      });
+      // return value; 
+    }
+  },
   props: ['id', 'task'],
+  computed: {
+    ...mapState('tasks', ['search'])
+  },
   methods: {
       ...mapActions('tasks', ['updateTask', 'deleteTask']),
       promptToDelete(id) {
@@ -87,6 +107,12 @@ export default {
           // console.log('>>>> OK')
           this.deleteTask(id);
         })
+      },
+      showEditTaskModal() {
+        this.showEditTask = true;
+      },
+      closeEditTaskModal() {
+        this.showEditTask = false; 
       }
   }
 };
