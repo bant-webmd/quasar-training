@@ -10,7 +10,7 @@
 
         <q-scroll-area class="q-scroll-area-tasks">
           <no-tasks
-            v-if="!Object.keys(tasksTodo).length && !search"
+            v-if="!Object.keys(tasksTodo).length && !search && !settings.showTasksInOneList"
           ></no-tasks>
           <tasks-todo
             v-if="Object.keys(tasksTodo).length"
@@ -74,6 +74,7 @@ export default {
     // Map getters from 'tasks' module 
     // then specify which getters in the array
     ...mapGetters('tasks', ['tasksTodo', 'tasksComplete']),
+    ...mapGetters('settings', ['settings']),
     ...mapState('tasks', ['search'])
   },
   mounted() {

@@ -62,7 +62,8 @@ module.exports = function (ctx) {
         'QTime',
         'QForm',
         'QBanner',
-        'QScrollArea'
+        'QScrollArea',
+        'QToggle'
       ],
 
       directives: [
@@ -74,7 +75,8 @@ module.exports = function (ctx) {
       // Quasar plugins
       plugins: [
         'Notify',
-        'Dialog'
+        'Dialog',
+        'LocalStorage'
       ]
     },
 

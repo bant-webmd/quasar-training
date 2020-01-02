@@ -1,0 +1,229 @@
+----------------
+ADD A "SHOW 12 HOUR TIME FORMAT" SETTING 
+----------------
+- We want to add a setting that changes time format to 12 hours (vs 24hr time)
+
+1) Open up pages/PageSettings.vue - DONE 
+    - Copy code for Settings from QListItem 
+        - Grab the entire q-list element and paste inside q-page 
+    - Delete everything below the "battery too low" toggle option. (the q-items)
+2) Quiet errors from pasting code - DONE 
+    - Add QToggle to quasar.conf
+    - Change the heading text to "Settings" 
+    - Change toggle text to "Show 12 hour time format"  
+    - Fix the v-model reference - DONE 
+        - Change variable to show12HourTimeFormat 
+        - Declare the property in data() and set it to false by default 
+
+
+----------------
+VUEX - CREATE A SETTINGS STORE - DONE 
+----------------
+- Before you go to far with anything you should create a store
+- RULE OF THUMB: 
+    - Create a separate store module for every page / major set of data in the app. 
+
+1) Set up the core files for the settings module - DONE
+    - create store/settings/state.js
+        - Export default object that stores properties 
+    - create store/settings/mutations.js
+        - Export named functions that have state and payload params  
+    - create store/settings/actions.js
+        - Export named functions that have {commit} and payload params 
+    - create store/settings/getters.js 
+        - Export named functions that each pass the state as a parameter
+    - create store/settings/index.js 
+        import * as getters from './getters'
+        import * as actions from './actions'
+        import * as mutations from './mutations'
+        import state from './state' 
+
+        export default {
+            namespaced: true,
+            getters,
+            actions,
+            mutations,
+            state 
+        }
+    - Add module to store/index.js 
+2) Add 'settings' property to state - DONE 
+    settings: {
+        show12HourTimeFormat: false 
+    }
+3) Add getter for 'settings' - DONE 
+    settings(state) {
+        return state.settings 
+    }
+4) Map the getter to the computed object in PageSettings.vue 
+
+
+
+----------------
+ADD A COMPUTED GETTER AND SETTER - DONE 
+----------------
+1) Add computed property to replace show12HourTimeFormat in PageSettings.vue - DONE 
+    - Set up getter: 
+    return this.settings.show12HourTimeFormat
+    - Set up setter: 
+    // trigger action which mutates the state property 
+2) Create setShow12HourTimeFormat action and mutation - DONE 
+    - both are fairly simple 
+    - just set the value directly in the mutation 
+3) Map the actions and trigger the action in the setter - DONE  
+
+
+
+----------------
+FORMAT THE TIME WITH A COMPUTED PROPERTY - DONE 
+----------------
+- When the setting is enabled we want to change the format using a computed property 
+- Can't use a filter since filters don't have access to computed properties or other instance properties ****
+
+1) Open up Tasks/Task.vue - DONE 
+    - replace task.dueTime with a computed property taskDueTime() 
+        - By default return the unformatted time 
+2) Map the settings getter in Task.vue - DONE 
+    - In taskDueTime() 
+        - If the setting is true return formatted version
+3) Create the formatted time - DONE 
+    - Use quasar date utility 
+    return date.formatDate(this.task.dueDate + ' ' + this.task.dueTime, 'h:mmA')
+
+
+
+----------------
+ADD A "SHOW TASKS IN ONE LIST" SETTING - DONE   
+----------------
+1) Add new setting -> showTasksInOneList:false - DONE 
+    - Add this to state 
+    - Create an action and mutation -> setShowTasksInOneList
+2) Create a new toggle control on PageSettings.vue - DONE
+    - Label -> Show tasks in one list 
+    - Set v-model -> showTasksInOneList
+3) Map the action - DONE 
+4) Create computed property getter and setter - DONE   
+5) In TasksTodo.vue - DONE
+    GOAL: If setting is true make it appear as a single list of Todos 
+    - map settings getter to computed 
+    - Add v-if to list-header 
+        v-if="!settings.showTasksInOneList"
+6) In TasksComplete.vue - DONE 
+    - Add v-if to list-header 
+        v-if="!settings.showTasksInOneList"
+7) Also remove the margin in between the two lists - DONE
+    - In TasksComplete.vue Bind the class attribute 
+        - Add the q-mt-lg conditionally 
+8) Hide No Tasks banner if setting is true - DONE 
+    - In PageTodo.vue mapGetters again from settings module this time 
+    - On the no-tasks component modify the v-if with another condition (...&& !settings.showTasksInOneList)
+
+
+
+----------------
+MAKE THE SETTINGS PERSISTENT USING LOCALSTORAGE PLUGIN - DONE 
+----------------
+APPROACH 1: We can use localstorage in the browser to store key:value pairs -> with vanilla JavaScript 
+
+1) In store actions set the localstorage value of the state property 
+    localstorage.setItem('show12HourTimeFormat', value)
+    localstorage.setItem('showTasksInOneList', value) 
+2) Grab the localstorage values when the app starts up 
+
+APPROACH 2: Use localstorage with Quasar localstorage plugin. This allows us to store more complex data in localstorage. Also allows us to set data on mobile and desktop app storage. 
+- It sets a special value that represents an object 
+    - Quasar then translates that back 
+
+1) Install 'LocalStorage' to the plugins array - DONE
+2) Use the plugin "outside of .vue file" - DONE 
+    - Need to use it in the store files 
+    - Add the import to the top of the actions.js 
+    import { LocalStorage } from 'quasar' 
+3) Create a new action that saves the entire settings object to localstorage. - DONE 
+    saveSettings({ state }) {
+        LocalStorage.set('settings', state.settings)
+    }
+4) Trigger saveSettings after any given action - DONE 
+    - Add dispatch parameter to deconstructed context 
+    - Use dispatch to call other actions 
+        - Call after we commit the mutations  
+    setShowTasksInOneList({ commit, dispatch }, value) {
+        commit(...)
+        dispatch('saveSettings')
+    }
+
+
+----------------
+GET AND APPLY LOCALSTORAGE SETTINGS ON APP LOAD - DONE  
+----------------
+1) Grab settings via an action -> getSettings() - DONE 
+    getSettings({commit}) {
+        // get settings from localstorage if they exist 
+        let settings = LocalStorage.getItem('settings');
+        // if settings exist in localstorage
+        if (settings) {
+            // set the state via mutation 
+            commit('setSettings', settings);
+        }
+    }
+2) Trigger the getSettings() action upon app load. - DONE
+    - mapActions to methods -> getSettings action 
+    - Add mounted() hook to App.vue 
+        - call getSettings() here 
+3) Define setSettings mutation - DONE 
+    setSettings(state, settings) {
+        // Mutate the state object's settings property 
+        // Assign it to be the settings object grabbed from LocalStorage
+        Object.assign(state.settings, settings);
+    }
+
+
+
+----------------
+ADD A "MORE" SECTION AND HELP PAGE - DONE 
+----------------
+1) Create PageHelp.vue - DONE 
+    - Add Root element <q-page padding> 
+    - <h5>How to use Awesome Todo</h5>
+    - <p>Lorem ipsum....</p>
+2) Set up a route for the Help page - DONE 
+    - Add to router/routes.js
+    - Add a new path object.  
+    - Path should be '/settings/help/'
+3) Add a new section to settings page called "More" - DONE 
+    - Duplicate the q-list and Paste it below the existing q-list 
+    - Get rid of the second q-item in the new q-list
+    - Change header to "More" in the new q-item 
+    - Change item-label to "Help" 
+    - Replace q-toggle with a q-icon 
+        - Set name="chevron_right"
+4) Add class="q-mb-md" to first q-list - DONE
+5) Add a link to the help page to the "Help" q-item 
+    - to="/settings/help"
+6) Put a back button on the help page - DONE 
+    - Settings
+        to="/settings" 
+        flat
+        color="primary"
+        icon="chevron_left"
+        label="Back"
+
+
+----------------
+ADD "VISIT OUR WEBSITE" LINK WITH openURL UTILITY - DONE 
+----------------
+1) In the "More" q-list add a new q-item 
+    - Change the label to "Visit our website" 
+    - Add click handler to q-item that triggers visitOurWebsite() method 
+2) How you open URLs can be different from device to device -> Quasar gives us a utility to handle those details for us. 
+    import { openURL } from 'quasar'
+    // call this in visitOurWebsite() method 
+    openURL("http://www.google.com")
+
+
+----------------
+ADD "EMAIL US" LINK WITH - DONE 
+----------------
+- We need to use a mailto to trigger an email client 
+- Duplicate q-item for visitOurWebsite and replace label and method with "Email us" and emailUs()
+- Create emailUs() method 
+    window.location.href="mailto:hello@awesometodo.com?subject=Awesome Todo Feedback"
