@@ -37,7 +37,15 @@
     >
       <q-list dark>
         <q-item-label header>Navigation</q-item-label>
-        <q-item class="text-grey-4" v-for="nav in navs" :key="nav.to" clickable tag="a" :to="nav.to" href="https://quasar.dev" exact>
+        <q-item
+          class="text-grey-4"
+          v-for="nav in navs"
+          :key="nav.to"
+          clickable
+          tag="a"
+          :to="nav.to"
+          href="https://quasar.dev"
+          exact>
           <q-item-section avatar>
             <q-icon :name="nav.icon" />
           </q-item-section>
