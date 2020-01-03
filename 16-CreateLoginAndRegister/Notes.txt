@@ -1,0 +1,159 @@
+----------------
+CREATE A LOGIN & REGISTER PAGE AND ROUTE 
+----------------
+1) Create PageAuth.vue 
+    - q-page > p 
+2) Create new route 
+    - path: '/auth'
+3) Add a button so that we can get to the /auth page 
+    - SETTINGS: 
+        to="/auth"
+        color="secondary"
+        icon-right="account_circle"
+        label="Login" 
+        class="absolute-right" 
+
+
+----------------
+CREATE TAB PANELS FOR LOGIN AND REGISTER  
+----------------
+1) Go to Tab Panels and grab the one that says Mail, Alarms, etc. 
+    - Install 'QTabPanels', 'QTabPanel', 'QSeparator' 
+    - Copy the first q-card 
+    - Copy the script as well 
+2) Change Props on q-tab 
+    - Change labels:
+        label="Login"
+        label="Register" 
+    - Change name props: 
+        name="login"
+        name="register"
+3) Change props on q-tab-panel(s)
+    - name props: 
+        name="login"
+        name="register"
+    - Change text-h6:
+        "Login" 
+        "Register" 
+4) Add class="auth-tabs"
+    .auth-tabs {
+        max-width: 500px;
+        margin: 0 auto; 
+    }
+
+
+----------------
+REGISTER - CREATE COMPONENT AND ADD A BANNER  
+----------------
+1) Set data.tab='register' so we can work 
+2) Create components/Auth 
+    - Create Auth/Register.vue 
+    - Add and register this component to PageAuth 
+3) Copy Banner component code from Quasar.dev 
+    - Get the gray one with the wifi icon 
+    - Delete template tag with wifi button 
+    - Add text "Register to access your Todos anywhere!
+    - SETTINGS:
+        v-slot:avatar 
+        name="account_circle"
+
+
+----------------
+REGISTER - ADD EMAIL/PASSWORD FIELDS & BUTTON   
+----------------
+1) Grab some input code from Quasar.dev 
+    - Grab an outlined input and paste it into Register.vue (under the banner)
+2) Wrap all the elements in a q-form 
+    - wrap a div.row.q-mb-md around the banner 
+    - do the same around the q-input
+    - Add class of "col" to banner and the input  
+3) Configure Input 
+    - SETTINGS: 
+        outlined 
+        v-model="formData.email"
+        class="col"
+        label="Email" 
+        stack-label
+4) Add data object to handle formData 
+    formData: {
+        email: '',
+        password: ''
+    }
+5) Duplicate the form row and configure for password 
+    - SETTINGS:
+        outlined 
+        v-model="formData.password"
+        class="col"
+        label="Password"
+        stack-label 
+        type="password"
+6) Add submit button inside of div.row below password 
+    - SETTINGS:
+        color="primary"
+        label="Register"
+        type="submit"
+    - Put q-space component as a sibling to the button to push the button to the right 
+
+
+----------------
+REGISTER - FORM VALIDATION    
+----------------
+1) On the form element add @submit.prevent="submit"
+2) Create the handler in methods 
+    submitForm() {
+        ...
+    }
+3) Add validation rule to where the minimum characters for password is 6 characters. 
+    :rules="[val => val.length >= 6 || 'Please enter at least 6 characters.']"
+    - Enable lazy rules so validation is fired after blur event on field 
+    - Add lazy-rules as a prop to input 
+4) Add validation to email field to check if email is valid 
+    :rules="[val => isValidEmailAddress(val) || 'Please enter a valid email address.']"
+5) Create isValidEmailAddress() method 
+    isValidEmailAddress(email) {
+        // paste regular expression from stackoverflow 
+        // javascript valid email address -> google that 
+        // use first result 
+        return re.test(String(email).toLowerCase())
+    }
+
+
+----------------
+REGISTER - SUBMIT FORM IF VALID     
+----------------
+1) We want to validate the form before we submit the data 
+    - Use refs to accomplish this (like before)
+    - Use a ref to the form and call .validate() 
+        - See mixins/mixin-add-edit-task.js 
+    - for now just log out after validation. 
+
+
+----------------
+LOGIN - REUSE THE REGISTER COMPONENT      
+----------------
+1) We have the same fields and behavior so use a shared component. 
+    - change the Register.vue component to be LoginRegister.vue 
+    - Register it as 'login-register'
+    - update broken references 
+2) Add the Component to the login q-panel
+3) We can use the tab property in PageAuth to determine which functions to call 
+    - Use this as a prop on the login-register component
+    :tab=tab
+    - Register the prop in the component 
+4) In submit form after successful validation 
+    if(this.tab == "login") {
+        console.log('login the user')
+    } else {
+        console.log('register the user')
+    }
+
+
+----------------
+LOGIN/REGISTER - CUSTOMIZE THE BANNER
+----------------
+1) Bind the label of the button to the value of the 'tab' prop being passed down 
+2) Use tab as the template tag instead of the static "Register" text. 
+3) Create a filter for the template tag:
+    titleCase(value) {
+        return value.charAt(0).toUpperCase() + value.slice(1);
+    }
