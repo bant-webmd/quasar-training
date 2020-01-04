@@ -1,0 +1,37 @@
+----------------
+ADD FIREBASE TO THE PROJECT USING BOOTFILE 
+----------------
+- BOOTFILES: 
+    - You can run things that need to be injected into the global Vue instance 
+    - You can tweak router settings
+    - You can Add analytics scripts that run upon booting up. 
+    - We use a bootfile to run code before the app starts 
+        - run: quasar new boot <nameOfBootfile> 
+        - Then add the bootfile name to the quasar.conf boot array 
+
+- OUR USAGE: 
+    - In our case we don't need access to the Vue instance or anything like that. We simply want to initialize the firebase package with our configuration. 
+    - This way when we call firebase in the app it'll have the proper config. 
+
+- Create the bootfile -> quasar new boot firebase 
+    - Delete the default contents (we don't need to inject)
+- Go to console.firebase.google.com 
+    - Go to awesometodo project 
+    -> Click "Add app" at the top 
+    -> Click the web set up 
+    -> Name it "Awesome Todo - Web" 
+    -> Click "Register App"
+- Grab config from the generated page 
+    - Paste into bootfile along with initialize line. 
+- Install firebase package via npm 
+    -> npm install --save firebase 
+- Import firebase package in the bootfile 
+    - store config in firebaseConfig var  
+    - remove firestore import 
+    - Store initialization into a variable firebaseApp
+        - pass firebaseConfig to the initialization call  
+    - call auth() on firebaseApp and store result in firebaseAuth variable 
+    - export {firebaseAuth}
+        - Now this variable will be available within our app. 
+- Remove comments as needed 
+
