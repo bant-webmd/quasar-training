@@ -1,0 +1,53 @@
+----------------
+INTRODUCTION TO FIREBASE - DONE 
+----------------
+- Firebase is an all-in-one Back end solution from Google  
+- Can authenticate and register users in many different ways 
+- We'll be working with the Real-time database instead of the newer Cloud Firestore. (both are actually real-time)
+- They offer APIs for any platform that you need. (we'll be using the Web API)
+- It also has FileStorage, Analytics, and more 
+
+
+----------------
+HOW WE'RE GOING TO USE FIREBASE - DONE 
+----------------
+- We are going to use Firebase to authenticate and store our User information. 
+    - We'll be using the simple email and password authentication scheme. 
+- As we change data in Firebase other devices will be updated in realtime. 
+
+
+----------------
+CREATE A FIREBASE PROJECT - DONE 
+----------------
+- Go to firebase.google.com - DONE
+    - log in with google account (use webmd account)
+    - Add project -> Call it "Awesome Todo" 
+    - Accept terms and conditions and click "continue"
+- Click database on the left panel - DONE
+    -> Click "create database" under Realtime database 
+    - Start it in test mode -> click "enable" 
+- Create tasks with the following structure: - DONE
+    tasks: {
+        id1: {
+            name: "Go to shop", 
+            dueDate: "2019/05/26"
+        },
+        id2: {
+            name: "Get bananas", 
+            dueDate: "2019/05/27"
+        }
+    }
+- SIDENOTE: VIEWING JSON - DONE
+    - Click the "tasks" object 
+    - A URL will be generated 
+    - Go to the URL and put .json at the end and you will get the collection as JSON  
+
+
+----------------
+SETUP AUTHENTICATION - DONE 
+----------------
+- We need to set up authentication 
+    -> Click "Authentication" then click "Set up sign in method"
+    -> Choose email and password authentication and enable it
+- Users tab at the top shows the users you are authenticating 
+    - You can create a test user here 
