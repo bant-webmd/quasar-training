@@ -33,5 +33,49 @@ ADD FIREBASE TO THE PROJECT USING BOOTFILE
     - call auth() on firebaseApp and store result in firebaseAuth variable 
     - export {firebaseAuth}
         - Now this variable will be available within our app. 
-- Remove comments as needed 
 
+
+
+----------------
+CREATE A VUEX AUTH STORE  
+----------------
+- duplicate an existing store and remove the data.
+- import the auth module to the index.js (set it as one of the modules)
+
+
+----------------
+REGISTER USER  
+----------------
+- Create a new action called registerUser({}, payload) 
+    - Just log the payload for now 
+- In the LoginRegister.vue component 
+    - Map the registerUser action 
+- Call the registerUser action within the submitForm() method and pass the formData to the action 
+- Import firebaseAuth from the bootfile 
+- Find the firebase method for registering user 
+    - Search "firebase webAPI" on google 
+    - Under firebase.auth -> Click "Auth" 
+    - Use the createUserWithEmailAndPassword() method in the register action 
+        - Pass the user email and password 
+    - Chain a then block to handle the response from the Auth API
+        - Log response   
+    - Chain a catch to handle error -> log error.message 
+
+
+----------------
+LOGIN USER   
+----------------
+- Create loginUser action 
+- Use the firebase signInWithEmailAndPassword method on the firebaseAuth object 
+    - Pass the email and password to the method 
+- Call the action in the Submit form method on LoginRegister.vue 
+    - Pass the formData to the action
+
+
+----------------
+ADD LOGOUT BUTTON - SHOW ONLY WHEN USER LOGGED IN 
+----------------
+- Create new state property called loggedIn on the state for auth module 
+- Create setLoggedIn(state, value) mutation 
+    - Will set a boolean value to state.loggedIn 
+- 
