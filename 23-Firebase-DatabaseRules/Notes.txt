@@ -1,0 +1,57 @@
+----------------
+INTRODUCTION / GOALS     
+----------------
+1) Make sure the app works with multiple users 
+    - One user can log out and another can log in 
+2) Set up database rules so once a user logs in it loads ONLY their data 
+
+
+----------------
+CLEAR THE STATE AFTER USER LOGS OUT      
+----------------
+- Create mutations that clear out data upon logout 
+    - Example: state.tasks = {}
+- These can be called in handleAuthStateChange()
+
+
+----------------
+UPDATE THE FIREBASE DATABASE RULES       
+----------------
+- GOAL:
+    - We need to protect the data so that only authenticated users can read/write to the database 
+
+- In Database > Rules (tab)
+    - Set the .read and .write props 
+    EXAMPLE: 
+        {
+            .read: "auth != null",
+            .write: "auth != null" 
+        }
+
+- GOAL 2: 
+    - At this point any authed user can mess with another users tasks 
+
+- In the rules tab we can add objects which correspond to objects in our data 
+    EXAMPLE: Write to tasks but not read 
+        {
+            "rules": {
+                "tasks": {
+                    ".read": true, 
+                    ".write": false 
+                }
+            }
+        }
+    
+    EXAMPLE: Use wildcard to match uid for authed user 
+    // $uid -> $ sign indicates any match for the key 
+    // Then we only allow read/write if the $uid is equal to the authed user's uid 
+        {
+            "rules": {
+                "tasks": {
+                    "$uid": {
+                        ".read": "auth.uid == $uid", 
+                        ".write": "auth.uid == $uid" 
+                    }
+                }
+            }
+        }

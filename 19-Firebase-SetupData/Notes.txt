@@ -1,0 +1,27 @@
+----------------
+DATA STRUCTURE DESIGN 
+----------------
+- Need to be able to store data for all our users, not just one 
+- When we grab data from firebase, we grab a whole node of data 
+    - Unlike a SQL database, we can't filter the node's data by property.
+    - It's best to have user specific data be contained under that userID 
+
+EXAMPLE:
+    tasks: {
+        'userID': {
+            'Task1: {
+                ...
+            }
+            'Task2: {
+                ...
+            }
+        }
+    }
+
+
+----------------
+ADD DATA TO FIREBASE USING IMPORT  
+----------------
+- You can export data from a firebase node as a JSON file 
+- Similarly you can import data if its formatted as JSON  
+- We should seed our data in this way 

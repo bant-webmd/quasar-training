@@ -1,0 +1,45 @@
+----------------
+WRITE DATA WHEN TASK ADDED     
+----------------
+- Since we have the hooks committing mutations already we don't need to call them in our actions manually 
+    - SOLUTION: Instead of having the addTask commit('addTask') we can have the addTask action dispatch another action which adds data to firebase 
+    - After adding data to firebase our hooks will commit the data which updates the view 
+
+EXAMPLE: 
+    fbAddTask({}, payload) {
+        // Get userID 
+        let userID = firebaseAuth.currentUser.uid 
+
+        // Set up a reference of the node we want to save new record to
+        // The new reference node must have a new ID for the task 
+        let taskRef = firebaseDb.ref('tasks/<userID>/<payload.id>')
+
+        // Now set the data to that reference pointer
+        taskRef.set(payload.task)
+    }
+
+
+----------------
+WRITE DATA WHEN TASK UPDATED     
+----------------
+- We can add updates to task refs via ref.update() 
+EXAMPLE:    
+    fbUpdateTask({}, payload) {
+        // get userID for ref pointer 
+        let userID = firebaseAuth.currentUser.uid;
+
+        // get ref task to update 
+        let taskRef = firebaseDb.ref('tasks/<userID>/<payload.id>')
+
+        // pass updates to firebase 
+        taskRef.update(payload.updates)
+    }
+
+
+----------------
+WRITE DATA WHEN TASK DELETED     
+----------------
+- Use ref.remove() to delete a record 
+    - Doesn't require any extra params (if the ref points to the correct node)
+
+    

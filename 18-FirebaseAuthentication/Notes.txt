@@ -78,4 +78,58 @@ ADD LOGOUT BUTTON - SHOW ONLY WHEN USER LOGGED IN
 - Create new state property called loggedIn on the state for auth module 
 - Create setLoggedIn(state, value) mutation 
     - Will set a boolean value to state.loggedIn 
-- 
+- Use firebaseAuth.onAuthStateChanged() to handle if user is currently logged in 
+    - This function takes a callback which receives "user" object from Firebase 
+    - If theres a user then the auth session is logged in / active. 
+
+
+----------------
+LOG THE USER OUT  
+----------------
+- Use firebaseAuth.signOut()
+    - This signs the user out of firebase 
+    - Just trigger this with an action 
+    - After logout the onAuthStateChanged() hook will fire 
+
+
+----------------
+REDIRECT ON LOG IN / LOG OUT   
+----------------
+- Call this.$router.push -> to push to where you want after login 
+- Call this.$router.replace(/loginRoute) -> to push to login screen after log out 
+
+
+----------------
+NAVIGATION GUARDS - PROTECTED ROUTES    
+----------------
+- Set up navigation guards in a bootfile 
+- Add data to local storage if the user is logged in. 
+    - LocalStorage.set('loggedIn', true)
+    - LocalStorage.set('loggedIn', false) 
+    - Do this upon login/logout action triggers. 
+
+- BOOTFILE
+    export default ({router}) => {
+        router.beforeEach((to, from, next) => {
+            let loggedIn = LocalStorage.getItem('loggedIn')
+            if (!loggedIn && to.path !== '/auth') {
+                next('/auth')
+            } else {
+                next()
+            }
+        })
+    }
+
+
+----------------
+HANDLING LOGIN ERRORS and LOADING     
+----------------
+- Create global function where we handle error-messages 
+- We can use the dialog plugin or something
+- Quasar provides a global loading plugin 
+    - We can use it in Components like this: 
+    import { Loading } from 'quasar' 
+    ...
+    Loading.show() 
+    ...
+    Loading.hide() 

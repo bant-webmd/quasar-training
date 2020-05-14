@@ -1,0 +1,70 @@
+----------------
+READING DATA WHEN THE USER LOGS IN  
+----------------
+1) Delete all the base state data 
+2) Set up an action that will be used to load data from firebase 
+3) Trigger this action upon login
+    - Just pass 'dispatch' along with 'commit' in login Action 
+    - This way you can call another action from within an action 
+    - dispatch('<module>/<actionName>', payloadForAction, {root: true})
+
+
+----------------
+CONNECT TO THE DATABASE    
+----------------
+- In the firebase bootfile:
+    - import "firebase/database" 
+    - firebaseDb = firebaseApp.database() 
+    - export { firebaseAuth, firebaseDb }
+- Import this firebaseDb object in the store modules as needed 
+
+
+----------------
+READ DATA WHEN TASK ADDED     
+----------------
+- To access firebase data you have to first set up a "reference" to a particular node within the database 
+- We can add hooks to the refs as well when data is added or removed
+    - Hooks should be added on login or whenever the database connection is initialized. 
+- After getting the data via the hook we can add the data to the vuex store 
+EXAMPLE: 
+    // Get the current user id 
+    // uid is the UID created by firebase 
+    let userID = firebaseAuth.currentUser.uid
+    // Pass the path to the node of data you wish to retreive 
+    let userTasks = firebaseDb.ref('tasks/<userID>')
+
+    // Set up hook listener when a new todo is added
+    // This hook is also fired when we first connect to the DB  
+    userTasks.on('child_added', snapshot => {
+        // snapshot.val() returns the data
+        // snapshot.key is the UID for the task record 
+        let payload = {
+            id: snapshot.key 
+            task: snapshot.val() 
+        }
+        commit('addTask', payload);
+    })
+
+
+----------------
+READ DATA WHEN TASK UPDATED      
+----------------
+- When data records/nodes are updated the view will not update in realtime
+- To solve this we need to add another hook -> use the child_changed hook 
+EXAMPLE: 
+    userTasks.on('child_changed', snapshot => {
+        let task = snapshot.val() 
+        let key = snapshot.key 
+        let payload = {
+            id: key, 
+            updates: task 
+        }
+        commit('updateTask', payload)
+    })
+
+
+----------------
+READ DATA WHEN TASK DELETED       
+----------------
+- Similarly we need a hook for when a record is deleted 
+- Use the child_removed hook in the same way that child_changed was used 

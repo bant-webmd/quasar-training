@@ -1,0 +1,24 @@
+----------------
+ADD A LOADING VIEW FOR THE TODO PAGE     
+----------------
+- Create vuex state properties that track if the firebase data is loaded or not 
+- Set these in the firebase reading operations 
+    - If not set show quasar loading component 
+    - If set don't show quasar loading component 
+
+----------------
+HIDE LOADING VIEW WHEN TASKS DOWNLOADED      
+----------------
+- HOW CAN WE KNOW WHEN WE'VE COMPLETED LOADING DATA FROM FIREBASE? 
+    - Firebase provides hooks!
+- In fbReadData action add the following:  
+    // initial check for data 
+    // add once listener for the 'value' event 
+    // 'value' event emitted when a value is returned from the reference node 
+    userTasks.once('value', snapshot => {
+        commit('setTasksDownloaded', true)
+    })
+
+- In handleAuthStateChange upon logout commit the 'setTasksDownloaded' mutation and pass false. 
+    - Basically reset the store once logging out. 
+
